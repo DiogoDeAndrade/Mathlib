@@ -53,6 +53,24 @@ namespace Mathlib
             return random.Range(x, y);
         }
 
+        public float Distance(float x, float y) => Mathf.Sqrt(DistanceSqr(x, y));
+        public float DistanceSqr(float x, float y)
+        {
+            float dx = (x - this.x);
+            float dy = (y - this.y);
+
+            return dx * dx + dy * dy;
+        }
+
+        public float Distance(Vector2 v) => Mathf.Sqrt(Distance(v));
+        public float DistanceSqr(Vector2 v)
+        {
+            float dx = (v.x - x);
+            float dy = (v.y - y);
+
+            return dx * dx + dy * dy;
+        }
+
 
         public override string ToString()
         {
