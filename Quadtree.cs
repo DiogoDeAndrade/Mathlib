@@ -5,6 +5,8 @@ namespace Mathlib
 {
     public class Quadtree<T>
     {
+        public delegate bool SelectionCriteria(T value);
+
         Vector2 min;
         Vector2 max;
         int     nLevels;
@@ -55,6 +57,27 @@ namespace Mathlib
             return ret;
         }
 
+        public T GetClosestObjectInCircle(float x, float y, float radius) => GetClosestObjectInCircle(new Vector2(x, y), radius);
+        public T GetClosestObjectInCircle(Vector2 p, float radius)
+        {
+            T ret = default(T);
+            float minSqrDist = radius * radius;
+
+            GetObjectsInCircle(rootNode, p, radius, ref ret, ref minSqrDist);
+
+            return ret;
+        }
+        public T GetClosestObjectInCircle(float x, float y, float radius, SelectionCriteria criteria) => GetClosestObjectInCircle(new Vector2(x, y), radius, criteria);
+        public T GetClosestObjectInCircle(Vector2 p, float radius, SelectionCriteria criteria)
+        {
+            T ret = default(T);
+            float minSqrDist = radius * radius;
+
+            GetObjectsInCircle(rootNode, p, radius, ref ret, ref minSqrDist, criteria);
+
+            return ret;
+        }
+
         void GetObjectsInCircle(Node node, Vector2 p, float radius, List<T> ret)
         {
             bool includeThis = node.rect.Contains(p);
@@ -87,6 +110,87 @@ namespace Mathlib
                     for (int i = 0; i < 4; i++)
                     {
                         GetObjectsInCircle(node.children[i], p, radius, ret);
+                    }
+                }
+            }
+        }
+
+
+        void GetObjectsInCircle(Node node, Vector2 p, float radius, ref T ret, ref float minSqrDist)
+        {
+            bool includeThis = node.rect.Contains(p);
+
+            if (!includeThis)
+            {
+                float dist = node.rect.DistanceSqr(p);
+                if (dist <= radius * radius)
+                {
+                    includeThis = true;
+                }
+            }
+
+            if (includeThis)
+            {
+                if (node.isLeaf)
+                {
+                    float r2 = radius * radius;
+
+                    foreach (var obj in node.objects)
+                    {
+                        float d = obj.pos.DistanceSqr(p);
+                        if (d <= minSqrDist)
+                        {
+                            ret = obj.value;
+                            minSqrDist = d;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        GetObjectsInCircle(node.children[i], p, radius, ref ret, ref minSqrDist);
+                    }
+                }
+            }
+        }
+
+        void GetObjectsInCircle(Node node, Vector2 p, float radius, ref T ret, ref float minSqrDist, SelectionCriteria criteria)
+        {
+            bool includeThis = node.rect.Contains(p);
+
+            if (!includeThis)
+            {
+                float dist = node.rect.DistanceSqr(p);
+                if (dist <= radius * radius)
+                {
+                    includeThis = true;
+                }
+            }
+
+            if (includeThis)
+            {
+                if (node.isLeaf)
+                {
+                    float r2 = radius * radius;
+
+                    foreach (var obj in node.objects)
+                    {
+                        if (!criteria(obj.value)) continue;
+
+                        float d = obj.pos.DistanceSqr(p);
+                        if (d <= minSqrDist)
+                        {
+                            ret = obj.value;
+                            minSqrDist = d;
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        GetObjectsInCircle(node.children[i], p, radius, ref ret, ref minSqrDist, criteria);
                     }
                 }
             }
