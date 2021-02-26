@@ -47,6 +47,13 @@ namespace Mathlib
             get { return this * (1.0f / magnitude); }
         }
 
+
+        public float Random(System.Random random)
+        {
+            return random.Range(x, y);
+        }
+
+
         public override string ToString()
         {
             return $"({x:F3},{y:F3})";

@@ -44,6 +44,18 @@ namespace Mathlib
             get { return this * (1.0f / magnitude); }
         }
 
+        public Vector3 RotateY(float angleInRadians)
+        {
+            Vector3 ret = this;
+            float c = Mathf.Cos(angleInRadians);
+            float s = Mathf.Sin(angleInRadians);
+
+            ret.x = x * c + z * s;
+            ret.z = z * c - x * s;
+
+            return ret;
+        }
+
         public override string ToString()
         {
             return $"({x:F3},{y:F3},{z:F3})";

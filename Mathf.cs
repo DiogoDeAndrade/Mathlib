@@ -4,20 +4,14 @@ namespace Mathlib
 {
     public static class Mathf
     {
+#if NET5_0
         public static float PI = MathF.PI;
-        public static float Deg2Rad = (MathF.PI * 2.0f) / 360.0f;
-        public static float Rad2Deg = 360.0f / (MathF.PI * 2.0f);
 
         public static float Sin(float a) => MathF.Sin(a);
         public static float Cos(float a) => MathF.Cos(a);
         public static float Tan(float a) => MathF.Tan(a); 
         public static float Asin(float a) => MathF.Asin(a);
-        public static int Clamp(int v, int a, int b) => (v < a) ? (a) : ((v > b) ? (b) : (v));
-        public static float Clamp(float v, float a, float b) => (v < a) ? (a) : ((v > b) ? (b) : (v));
-        public static float Clamp01(float v) => (v < 0) ? (0) : ((v > 1) ? (1) : (v));
         public static float Abs(float v) => MathF.Abs(v);
-        public static byte Min(byte a, byte b) => (a < b) ? (a) : (b);
-        public static byte Max(byte a, byte b) => (a > b) ? (a) : (b);
         public static float Min(float a, float b) => MathF.Min(a, b);
         public static float Max(float a, float b) => MathF.Max(a, b);
         public static float Sqrt(float v) => MathF.Sqrt(v);
@@ -29,6 +23,34 @@ namespace Mathlib
         public static float CopySign(float x, float y) => MathF.CopySign(x, y);
         public static float Pow(float x, float y) => MathF.Pow(x, y);
         public static float Fract(float v) => v - (float)MathF.Truncate(v);
+#else
+        public static float PI = (float)Math.PI;
+
+        public static float Sin(float a) => (float)Math.Sin(a);
+        public static float Cos(float a) => (float)Math.Cos(a);
+        public static float Tan(float a) => (float)Math.Tan(a);
+        public static float Asin(float a) => (float)Math.Asin(a);
+        public static float Abs(float v) => (float)Math.Abs(v);
+        public static float Min(float a, float b) => (float)Math.Min(a, b);
+        public static float Max(float a, float b) => (float)Math.Max(a, b);
+        public static float Sqrt(float v) => (float)Math.Sqrt(v);
+        public static float Floor(float v) => (float)Math.Floor(v);
+        public static int FloorToInt(float v) => (int)Math.Floor(v);
+        public static int CeilToInt(float v) => (int)Math.Ceiling(v);
+        public static float Round(float v) => (float)Math.Round(v);
+        public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
+        public static float CopySign(float x, float y) => (float)((y < 0) ? (-Math.Abs(x)) : (Math.Abs(x)));
+        public static float Pow(float x, float y) => (float)Math.Pow(x, y);
+        public static float Fract(float v) => v - (float)Math.Truncate(v);
+#endif
+
+        public static float Deg2Rad = (PI * 2.0f) / 360.0f;
+        public static float Rad2Deg = 360.0f / (PI * 2.0f);
+        public static int Clamp(int v, int a, int b) => (v < a) ? (a) : ((v > b) ? (b) : (v));
+        public static float Clamp(float v, float a, float b) => (v < a) ? (a) : ((v > b) ? (b) : (v));
+        public static float Clamp01(float v) => (v < 0) ? (0) : ((v > 1) ? (1) : (v));
+        public static byte Min(byte a, byte b) => (a < b) ? (a) : (b);
+        public static byte Max(byte a, byte b) => (a > b) ? (a) : (b);
 
         public static float Lerp(float v1, float v2, float t) => v1 + (v2 - v1) * t;
 
