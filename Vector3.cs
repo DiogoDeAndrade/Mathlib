@@ -80,6 +80,8 @@ namespace Mathlib
         static public float Distance(Vector3 a, Vector3 b) => (b - a).magnitude;
         static public float SqrDistance(Vector3 a, Vector3 b) => (b - a).magnitudeSquared;
 
+        static public Vector3 RandomXZ(System.Random rnd, float rx, float rz) => new Vector3(rnd.Range(-rx, rx), 0, rnd.Range(-rz, rz));
+
         public Vector2 xy { get => new Vector2(x, y); set => (x, y) = (value.x, value.y); }
         public Vector2 xz { get => new Vector2(x, z); set => (x, z) = (value.x, value.y); }
         public Vector2 yx { get => new Vector2(y, x); set => (y, x) = (value.x, value.y); }
