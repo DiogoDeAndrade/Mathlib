@@ -33,6 +33,8 @@ namespace Mathlib
         public static float Abs(float v) => (float)Math.Abs(v);
         public static float Min(float a, float b) => (float)Math.Min(a, b);
         public static float Max(float a, float b) => (float)Math.Max(a, b);
+        public static int Min(int a, int b) => Math.Min(a, b);
+        public static int Max(int a, int b) => Math.Max(a, b);
         public static float Sqrt(float v) => (float)Math.Sqrt(v);
         public static float Floor(float v) => (float)Math.Floor(v);
         public static int FloorToInt(float v) => (int)Math.Floor(v);

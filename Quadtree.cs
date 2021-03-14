@@ -1,29 +1,30 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Mathlib
 {
-    public class Quadtree<T>
+    public class Quadtree<T> where T : class
     {
         public delegate bool SelectionCriteria(T value);
 
         Vector2 min;
         Vector2 max;
-        int     nLevels;
+        int nLevels;
 
         struct LeafObject
         {
             public Vector2 pos;
-            public T       value;
+            public T value;
         }
 
         class Node
         {
-            public Node             parent;
-            public bool             isLeaf;
-            public Rect             rect;
+            public Node parent;
+            public bool isLeaf;
+            public Rect rect;
             public List<LeafObject> objects;
-            public Node[]           children;
+            public Node[] children;
         }
 
         Node rootNode;
@@ -46,6 +47,12 @@ namespace Mathlib
                 leafNode.objects.Add(new LeafObject { pos = new Vector2(x, y), value = value });
             }
         }
+
+        public void Remove(T value)
+        {
+            Remove(rootNode, value);
+        }
+
 
         public List<T> GetObjectsInCircle(float x, float y, float radius) => GetObjectsInCircle(new Vector2(x, y), radius);
         public List<T> GetObjectsInCircle(Vector2 p, float radius)
@@ -212,6 +219,21 @@ namespace Mathlib
             }
 
             return null;
+        }
+
+        void Remove(Node node, T value)
+        {
+            if (node.isLeaf)
+            {
+                node.objects.RemoveAll((o) => o.value == value);
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Remove(node.children[i], value);                    
+                }
+            }
         }
 
         Node Init(Rect r, int nLevels, Node parent = null)
