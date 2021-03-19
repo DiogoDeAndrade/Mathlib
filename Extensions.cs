@@ -12,5 +12,10 @@ namespace Mathlib
         {
             return (float)(rnd.NextDouble() * (valMax - valMin) + valMin);
         }
+
+        public static int Range(this System.Random rnd, int valMin, int valMax)
+        {
+            return rnd.Next(valMin, valMax);
+        }
     }
 }
