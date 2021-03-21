@@ -85,6 +85,37 @@ namespace Mathlib
             return ret;
         }
 
+        public void Move(T value, Vector3 oldPos, Vector3 newPos)
+        {
+            // Find entity in tree (top-down search), remove it from the 
+            // leaf node and move it to a new one with a bottom-up search
+            var srcLeafNode = GetLeafNode(rootNode, oldPos.x, oldPos.y);
+            
+            if (srcLeafNode.rect.ContainsMinInclusive(newPos.x, newPos.y))
+            {
+                // Moved in same node, nothing else to do
+                return;
+            }
+
+            // Remove from this node and move it to another, starting the search from the bottom
+            srcLeafNode.objects.RemoveAll((o) => o.value == value);
+
+            var destNode = srcLeafNode.parent;
+            while (destNode != null)
+            {
+                if (destNode.rect.ContainsMinInclusive(newPos.x, newPos.y))
+                {
+                    destNode = GetLeafNode(destNode, newPos.x, newPos.y);
+                    if (destNode != null)
+                    {
+                        destNode.objects.Add(new LeafObject { pos = new Vector2(newPos.x, newPos.y), value = value });
+                        return;
+                    }
+                }
+                else destNode = destNode.parent;
+            }
+        }
+
         void GetObjectsInCircle(Node node, Vector2 p, float radius, List<T> ret)
         {
             bool includeThis = node.rect.Contains(p);
